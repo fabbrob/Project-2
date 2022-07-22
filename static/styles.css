@@ -1,0 +1,40 @@
+.header {
+    background-color: lightgreen;
+}
+
+.full-w {
+    width: 100%;
+}
+
+.half-h {
+    height: 50%;
+}
+
+.ten-vh {
+    height: 10vh;
+}
+.flx-c {
+    display: flex;
+    flex-direction: column;
+}
+
+.flx-r {
+    display: flex;
+    flex-direction: row;
+}
+
+.jst-algn-cntr {
+    justify-content: center;
+    align-items: center;
+}
+
+.algn-cntr {
+    align-items: center;
+}
+
+.spc-b {
+    justify-content: space-between;
+}
+
+
+

@@ -24,8 +24,8 @@ CREATE TABLE matches (
     id SERIAL PRIMARY KEY,
     team1_id INTEGER NOT NULL, FOREIGN KEY(team1_id) REFERENCES teams(id),
     team2_id INTEGER NOT NULL, FOREIGN KEY(team2_id) REFERENCES teams(id),
-    winner_id INTEGER, FOREIGN KEY(winner_id) REFERENCES teams(id),
-    scheduled DATETIME
+    winner_id TEXT,
+    scheduled TIMESTAMP
 );
 
 DROP TABLE IF EXISTS tips;

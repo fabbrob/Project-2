@@ -1,4 +1,5 @@
-from flask import Flask
+import re
+from flask import Flask, redirect, render_template, request, session
 import os
 import psycopg2
 import bcrypt
@@ -11,11 +12,15 @@ app.config['SECRET_KEY'] = SECRET_KEY
 
 @app.route('/')
 def index():
-  conn = psycopg2.connect(DB_URL)
-  cur = conn.cursor()
-  cur.execute('SELECT 1', []) # Query to check that the DB connected
-  conn.close()
-  return 'Hello, world!'
+    user_id = session.get("user_id")
+    if user_id:
+        return 'Hello, world'
+    else:
+        return 'Hello world'
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
