@@ -1,0 +1,26 @@
+{% extends "boilerplate.html" %}
+
+{% block script %}
+<script defer src="static/login.js"></script>
+{% endblock %}
+
+{% block content %}
+
+    <div class="th-vw th-mw egh-vh flx-c j-s a-c mrg-c m-tn-t f-g bn-f">
+        <img src="../static/images/four-sixths-tipping.png" class="th-xw">
+        <div class="grid f-w">
+            <div id="loginDiv" class="f-w flx-c ja-c trl-b">
+                <p>LOG IN</p>
+            </div>
+            <div id="signupDiv" class="f-w  flx-c ja-c b-b">
+                <p>SIGN UP</p>
+            </div>
+        </div>
+        <form id="userForm" class="flx-c ja-c tn-g f-w">
+            <input type="text" placeholder="Email" class="f-w fry-h ft-p n-o bb xt-fs">
+            <input type="password" placeholder="Password" class="f-w fry-h ft-p n-o bb xt-fs">
+            <button type="submit" class="f-w th-xw fry-h">LOG IN</button>
+        </form>
+    </div>
+
+{% endblock %}

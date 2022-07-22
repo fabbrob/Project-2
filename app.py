@@ -16,7 +16,7 @@ def index():
     if user_id:
         return 'Hello, world'
     else:
-        return 'Hello world'
+        return redirect('/login')
 
 @app.route('/login')
 def login():

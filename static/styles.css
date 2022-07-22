@@ -1,18 +1,80 @@
-.header {
-    background-color: lightgreen;
+/* HEIGHTS N WIDTHS */
+.th-mw {
+    min-width: 300px;
 }
 
-.full-w {
-    width: 100%;
+.th-xw {
+    max-width: 300px;
 }
 
-.half-h {
+.f-w {
+    width: 99%;
+}
+
+.tw-vw {
+    width: 20vw;
+}
+
+.th-vw {
+    width: 30vw;
+}
+
+.fty-h {
     height: 50%;
+}
+
+.fry-h {
+    height: 40px;
 }
 
 .ten-vh {
     height: 10vh;
 }
+.egh-vh {
+    height: 80vh;
+}
+
+/* PADDINGS */
+
+.ft-p {
+    padding: 0 14px;
+}
+
+/* BORDERS */
+
+.trl-b {
+    border-top: 1px solid black;
+    border-right: 1px solid black;
+    border-left: 1px solid black;
+}
+
+.b-b {
+    border-bottom: 1px solid black;
+}
+
+/* OUTLINES */
+
+.n-o {
+    outline: none;
+}
+
+/* MARGINS */
+
+.mrg-c {
+    margin: 0 auto;
+}
+
+.m-tn-t {
+    margin-top: 10%;
+}
+
+/* BOX-SIZING */
+
+.bb {
+    box-sizing: border-box;
+}
+
+/* FLEX BOX */
 .flx-c {
     display: flex;
     flex-direction: column;
@@ -23,12 +85,16 @@
     flex-direction: row;
 }
 
-.jst-algn-cntr {
+.ja-c {
     justify-content: center;
     align-items: center;
 }
 
-.algn-cntr {
+.j-s {
+    justify-content: flex-start;
+}
+
+.a-c {
     align-items: center;
 }
 
@@ -36,5 +102,25 @@
     justify-content: space-between;
 }
 
+.f-g {
+    gap: 5%;
+}
 
+.tn-g {
+    gap: 10px;
+}
 
+/* GRID BOX */
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+/* FONTS / TEXTS */
+
+.bn-f {
+    font-family: 'Bebas Neue', cursive;
+}
+.xt-fs {
+    font-size: 16px;
+}
