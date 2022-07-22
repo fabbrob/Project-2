@@ -3,10 +3,11 @@ import os
 import psycopg2
 import bcrypt
 
-app = Flask(__name__)
+DB_URL = os.environ.get("DATABASE_URL", "dbname=esport_tipping")
+SECRET_KEY = os.environ.get("SECRET_KEY", "pretend key for testing only")
 
-# If the DATABASE_URL is set, use that, otherwuse use local db.
-DB_URL = os.environ.get("DATABASE_URL", "dbname=esport_tipping") # Put your DB name
+app = Flask(__name__)
+app.config['SECRET_KEY'] = SECRET_KEY
 
 @app.route('/')
 def index():
