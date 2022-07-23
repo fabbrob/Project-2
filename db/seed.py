@@ -1,10 +1,22 @@
 from telnetlib import LOGOUT
 import psycopg2
+import bcrypt
+import os
 
 conn = psycopg2.connect("dbname=esport_tipping")
 cur = conn.cursor()
 
 cur.execute('TRUNCATE TABLE users, teams, matches, tips')
+
+cur.execute('DROP TABLE IF EXISTS users CASCADE')
+cur.execute('''CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    is_admin BOOLEAN
+)''')
+
 cur.execute('DROP TABLE IF EXISTS teams CASCADE')
 cur.execute('''CREATE TABLE teams (
     id SERIAL PRIMARY KEY,
@@ -20,6 +32,10 @@ cur.execute('''CREATE TABLE matches (
     winner_id TEXT,
     scheduled TIMESTAMP
 )''')
+
+password = 'rob'
+password_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+cur.execute('INSERT INTO users(username, email, password_hash, is_admin) VALUES (%s, %s, %s, %s)', ['fabbrob', 'robfabbro50@gmail.com', password_hash, 't'])
 
 for line in open('team_data.csv'):
     team_data = line.strip().split(',')

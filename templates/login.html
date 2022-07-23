@@ -16,11 +16,14 @@
                 <p>SIGN UP</p>
             </div>
         </div>
-        <form id="userForm" class="flx-c ja-c tn-g f-w">
-            <input type="text" placeholder="Email" class="f-w fry-h ft-p n-o bb xt-fs">
-            <input type="password" placeholder="Password" class="f-w fry-h ft-p n-o bb xt-fs">
+        <form id="userForm" action='/login' method='POST' class="flx-c ja-c tn-g f-w">
+            <input name="email" type="text" placeholder="Email" class="f-w fry-h ft-p n-o bb xt-fs">
+            <input name="password" type="password" placeholder="Password" class="f-w fry-h ft-p n-o bb xt-fs">
             <button type="submit" class="f-w th-xw fry-h">LOG IN</button>
         </form>
+        {% if error %}
+        <p class="red">INCORRECT EMAIL OR PASSWORD</p>
+        {% endif %}
     </div>
 
 {% endblock %}

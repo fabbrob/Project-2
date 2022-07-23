@@ -28,21 +28,25 @@ function createSignupForm() {
     const usernameInput = document.createElement('input');
     usernameInput.classList.add('f-w', 'fry-h', 'ft-p', 'n-o', 'bb', 'xt-fs');
     usernameInput.type = 'text';
+    usernameInput.name = 'username'
     usernameInput.placeholder = 'Username';
 
     const emailInput = document.createElement('input');
     emailInput.classList.add('f-w', 'fry-h', 'ft-p', 'n-o', 'bb', 'xt-fs');
     emailInput.type = 'text';
+    emailInput.name = 'email';
     emailInput.placeholder = 'Email';
 
     const passwordInput = document.createElement('input');
     passwordInput.classList.add('f-w', 'fry-h', 'ft-p', 'n-o', 'bb', 'xt-fs');
     passwordInput.type = 'password';
+    passwordInput.name = 'password';
     passwordInput.placeholder = 'Password';
 
      const confirmPasswordInput = document.createElement('input');
     confirmPasswordInput.classList.add('f-w', 'fry-h', 'ft-p', 'n-o', 'bb', 'xt-fs');
     confirmPasswordInput.type = 'password';
+    confirmPasswordInput.name = 'confirm_password'
     confirmPasswordInput.placeholder = 'Confirm Password';
 
     const signupButton = document.createElement('button');
@@ -50,6 +54,7 @@ function createSignupForm() {
     signupButton.type = 'submit';
     signupButton.innerText = 'SIGN UP'
 
+    userForm.action = '/signup'
     userForm.appendChild(usernameInput);
     userForm.appendChild(emailInput);
     userForm.appendChild(passwordInput);
@@ -65,11 +70,13 @@ function createLoginForm() {
     const emailInput = document.createElement('input');
     emailInput.classList.add('f-w', 'fry-h', 'ft-p', 'n-o', 'bb', 'xt-fs');
     emailInput.type = 'text';
+    emailInput.name = 'email'
     emailInput.placeholder = 'Email';
 
     const passwordInput = document.createElement('input');
     passwordInput.classList.add('f-w', 'fry-h', 'ft-p', 'n-o', 'bb', 'xt-fs');
     passwordInput.type = 'password';
+    passwordInput.name = 'password'
     passwordInput.placeholder = 'Password';
 
     const loginButton = document.createElement('button');
@@ -77,6 +84,7 @@ function createLoginForm() {
     loginButton.type = 'submit';
     loginButton.innerText = 'LOG IN'
 
+    userForm.action = '/login'
     userForm.appendChild(emailInput);
     userForm.appendChild(passwordInput);
     userForm.appendChild(loginButton);
