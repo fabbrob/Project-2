@@ -33,3 +33,13 @@ def check_login(email, password):
         return None
 
 
+def signup_user(username, email, password):
+    conn = psycopg2.connect(DB_URL)
+    cur = conn.cursor()
+    password_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+    cur.execute("INSERT INTO users (username, email, password_hash) VALUES (%s, %s, %s)", [username, email, password_hash])
+    conn.commit()
+    cur.close()
+    conn.close()
+    return
+

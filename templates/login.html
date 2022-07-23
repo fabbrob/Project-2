@@ -21,9 +21,13 @@
             <input name="password" type="password" placeholder="Password" class="f-w fry-h ft-p n-o bb xt-fs">
             <button type="submit" class="f-w th-xw fry-h">LOG IN</button>
         </form>
-        {% if error %}
+        {% if login_error %}
         <p class="red">INCORRECT EMAIL OR PASSWORD</p>
         {% endif %}
+        {% if signup_error %}
+        <p class="red">PASSWORDS DID NOT MATCH</p>
+        {% endif %}
+        
     </div>
 
 {% endblock %}
