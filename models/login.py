@@ -43,3 +43,19 @@ def signup_user(username, email, password):
     conn.close()
     return
 
+def update_profile_in_db(id, new_username, new_email):
+    conn = psycopg2.connect(DB_URL)
+    cur = conn.cursor()
+    cur.execute("UPDATE users SET username=%s, email=%s WHERE id=%s", [new_username, new_email, id])
+    conn.commit()
+    cur.close()
+    conn.close()
+
+def update_password_in_db(id, new_password):
+    password_hash = bcrypt.hashpw(new_password.encode(), bcrypt.gensalt()).decode()
+    conn = psycopg2.connect(DB_URL)
+    cur = conn.cursor()
+    cur.execute("UPDATE users SET password_hash=%s WHERE id=%s", [password_hash, id])
+    conn.commit()
+    cur.close()
+    conn.close()

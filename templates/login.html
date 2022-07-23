@@ -5,10 +5,10 @@
 {% endblock %}
 
 {% block content %}
-
+<div class="mrg-c nn-vh nn-vw">
     <div class="th-vw th-mw egh-vh flx-c j-s a-c mrg-c m-f-t f-g bn-f">
         <img src="../static/images/four-sixths-tipping.png" class="th-xw">
-        <div class="grid f-w">
+        <div class="grid two-columns f-w tw-fs ts white">
             <div id="loginDiv" class="f-w flx-c ja-c trl-b">
                 <p>LOG IN</p>
             </div>
@@ -27,7 +27,11 @@
         {% if signup_error %}
         <p class="red">PASSWORDS DID NOT MATCH</p>
         {% endif %}
-        
     </div>
-
+</div>
 {% endblock %}
+
+green 0 255 0
+blue 0 0 255
+red 255 0 0
+yellow 254 180 15

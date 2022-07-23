@@ -1,3 +1,13 @@
+html {
+    height: 100%;
+    background-color: lightyellow;
+}
+
+body {
+    background: rgb(255, 0, 0);
+    background: linear-gradient(90deg, rgba(255, 0, 0, 0.75) 0%, rgba(255, 0, 255, 0.5) 50%, rgba(254, 180, 15, 0.75) 100%);
+}
+
 /* HEIGHTS N WIDTHS */
 .th-mw {
     min-width: 300px;
@@ -19,8 +29,29 @@
     width: 30vw;
 }
 
+.nn-vw {
+    width: 99vw;
+}
+
+.th-h {
+    height: 10%;
+}
+
+.tw-h {
+    height: 20%;
+}
+
+
 .fty-h {
     height: 50%;
+}
+
+.nty-h {
+    height: 90%;
+}
+
+.h-h {
+    height: 100%;
 }
 
 .fry-h {
@@ -30,8 +61,21 @@
 .ten-vh {
     height: 10vh;
 }
+
+.fty-vh {
+    height: 50vh;
+}
+
 .egh-vh {
     height: 80vh;
+}
+
+.nn-vh {
+    width: 99vh;
+}
+
+.h-fh {
+    height: 100px;
 }
 
 /* PADDINGS */
@@ -43,15 +87,20 @@
 /* BORDERS */
 
 .trl-b {
-    border-top: 1px solid black;
-    border-right: 1px solid black;
-    border-left: 1px solid black;
+    border-top: 1px solid lightyellow;
+    border-right: 1px solid lightyellow;
+    border-left: 1px solid lightyellow;
 }
 
 .b-b {
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid lightyellow;
 }
 
+.div-b {
+    border: 3px solid blue;
+    border-radius: 20px;
+    padding: 5px 25px;
+}
 /* OUTLINES */
 
 .n-o {
@@ -64,8 +113,16 @@
     margin: 0 auto;
 }
 
+.m-r-t {
+    margin-right: 2%
+}
+
 .m-f-t {
     margin-top: 5%;
+}
+
+.m-r-f {
+    margin-right: 10%;
 }
 
 /* BOX-SIZING */
@@ -75,6 +132,9 @@
 }
 
 /* FLEX BOX */
+.flx {
+    display: flex;
+}
 .flx-c {
     display: flex;
     flex-direction: column;
@@ -94,12 +154,24 @@
     justify-content: flex-start;
 }
 
+.j-e {
+    justify-content: flex-end;
+}
+
 .a-c {
     align-items: center;
 }
 
+.a-s {
+    align-items: flex-start;
+}
+
 .spc-b {
     justify-content: space-between;
+}
+
+.js-fe {
+    justify-self: flex-end;
 }
 
 .f-g {
@@ -110,23 +182,69 @@
     gap: 10px;
 }
 
+.th-g {
+    gap: 80px;
+}
+
 /* GRID BOX */
 .grid {
     display: grid;
+}
+.two-columns {
     grid-template-columns: 1fr 1fr;
 }
 
+.three-columns {
+    grid-template-columns: 7% 1fr 7%;
+}
+
+.two-rows {
+    grid-template-rows: 10% 1fr;
+}
 /* FONTS / TEXTS */
 
 .bn-f {
     font-family: 'Bebas Neue', cursive;
 }
+
 .xt-fs {
     font-size: 16px;
 }
+
+.tw-fs {
+    font-size: 20px;
+}
+
+.ts {
+    text-shadow: 1px 1px 1px black;
+}
+
+.tsl {
+    text-shadow: 2px 2px 1px black;
+}
+
 
 /* COLOURS */
 
 .red {
     color: #ff0000;
+}
+
+.white {
+    color: white
+}
+
+/* BACKGROUNDS */
+
+.fs-g {
+    background: rgb(255, 0, 0);
+    background: linear-gradient(90deg, rgba(255, 0, 0, 0.75) 0%, rgba(255, 0, 255, 0.5) 50%, rgba(254, 180, 15, 0.75) 100%);
+}
+
+.w-bck {
+    background-color: white;
+}
+
+.ly-bck {
+    background-color: lightyellow;
 }
