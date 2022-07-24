@@ -15,7 +15,7 @@
 
     <div id="tips" class="nn-h flx-c ja-c white ts">
 
-        <p class="as-s ts-fs">WEEK {{dashboard.previous_week}}</p>
+        <p class="as-s ts-fs">WEEK {{dashboard.current_week}}</p>
 
         <div class="nn-h f-w flx-r ja-c twh-g">
             <div class="flx-c ja-c">
@@ -23,13 +23,13 @@
                 <span class="tw-fs">CORRECT TIPS</span>
             </div>
             <div class="flx-c ja-c">
-                <span class="fe-fs">{{dashboard.total_tips}}</span>
+                <span class="fe-fs">{{leaderboard.season_tips}}</span> 
                 <span class="tw-fs">SEASON TIPS</span>
             </div>
         </div>
 
         <div class="nnh flx-r fx-w j-c ac-s hf-g tplr">
-            {% for tip in dashboard.previous_week_tips %}
+            {% for tip in dashboard.current_week_tips %}
             <div class="flx-c ja-c">
                 <img src="{{tip.logo}}" height="100px" class="{{tip.tip_result}}">
                 <p>{{tip.abbreviation}}</p>
@@ -44,8 +44,8 @@
 
     <div id="leaderboard" class="nn-h flx-c ja-c">
             <div class="flx-r ja-c twh-g">
-                <p>POSITION</p>
-                <p>IMPROVEMENT</p>
+                <p>{{leaderboard.position}}</p>
+                <p>{{leaderboard.improvement}}</p>
             </div>
             <a class="tac">LCS LEADERBOARD</a>
         </div>
