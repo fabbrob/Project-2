@@ -14,7 +14,8 @@ class Leaderboard_Entry:
         leaderboard = get_leaderboard()
         self.season_tips = get_total_tips(user_id)
         self.position = get_user_position(user_id, leaderboard)
-        self.improvement = get_improvement(user_id)
+        prev_leaderboard = get_leaderboard_up_to_week(get_previous_week())
+        self.improvement = get_improvement(user_id, leaderboard, prev_leaderboard)
 
 
 def get_leaderboard():
@@ -27,6 +28,9 @@ def get_leaderboard():
         leaderboard.append(make_leaderboard_object(user[0], user[1]))
     for user in leaderboard:
         user['position'] = get_user_position(user['id'], leaderboard)
+    prev_leaderboard = get_leaderboard_up_to_week(get_previous_week())
+    for user in leaderboard:
+        user['improvement'] = get_improvement(user['id'], leaderboard, prev_leaderboard)
     return leaderboard
 
 def get_leaderboard_up_to_week(week):
@@ -117,18 +121,15 @@ def get_previous_week():
             return week - 1
     return week
 
-def get_improvement(user_id):
-    now = get_leaderboard()
-    prev = get_leaderboard_up_to_week(get_previous_week())
-    now_pos = get_user_position(user_id, now)
-    prev_pos = get_user_position(user_id, prev)
-    #nos 4th
-    #prev 5th
+def get_improvement(user_id, current_leaderboard, previous_leaderboard):
+    now_pos = get_user_position(user_id, current_leaderboard)
+    prev_pos = get_user_position(user_id, previous_leaderboard)
     now_int = convert_position_to_num(now_pos)
     prev_int = convert_position_to_num(prev_pos)
-    print()
-    print(now_int)
-    print(prev_int)
-    print()
     improvement_int = prev_int - now_int
-    return improvement_int
+    if improvement_int > 0:
+        return f'+{improvement_int}'
+    elif improvement_int < 0:
+        return f'-{improvement_int}'
+    else:
+        return '-'

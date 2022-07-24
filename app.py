@@ -99,13 +99,16 @@ def change_password():
     else:
         return render_template('settings.html', incorrect_password=True)
 
+@app.route('/leaderboard')
+def leaderboard():
+    return render_template('base.html')
 
 @app.route('/tips')
 def tips():
     return render_template('base.html')
 
-@app.route('/leaderboard')
-def leaderboard():
+@app.route('/ladder')
+def ladder():
     return render_template('base.html')
 
 if __name__ == "__main__":

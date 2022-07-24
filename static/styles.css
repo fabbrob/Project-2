@@ -118,7 +118,7 @@ body {
 }
 
 .gb {
-    border: 5px solid green;
+    border: 5px solid #00ff00;
 }
 
 .rb {
@@ -320,6 +320,10 @@ body {
 
 .purple {
     color: #6460F0;
+}
+
+.green {
+    color: #00ff00;
 }
 
 /* BACKGROUNDS */

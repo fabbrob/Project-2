@@ -13,7 +13,7 @@
         <p class="tw-fs purple">SUMMER 2022</p>
     </div>
 
-    <div id="tips" class="nn-h flx-c ja-c white ts">
+    <div class="nn-h flx-c ja-c white ts">
 
         <p class="as-s ts-fs">WEEK {{dashboard.current_week}}</p>
 
@@ -42,12 +42,20 @@
         </div>
     </div>
 
-    <div id="leaderboard" class="nn-h flx-c ja-c">
+    <div class="nn-h flx-c ja-c ts  white">
             <div class="flx-r ja-c twh-g">
-                <p>{{leaderboard.position}}</p>
-                <p>{{leaderboard.improvement}}</p>
+                <div class="flx-c ja-c">
+                    <span class="fe-fs">{{leaderboard.position}}</span>
+                    <span class="tw-fs">LADDER POSITION</span>
+                </div>
+                <div class="flx-c ja-c">
+                    <span class="fe-fs">{{leaderboard.improvement}}</span>
+                    <span class="tw-fs">LADDER IMPROVEMENT</span>
+                </div>
             </div>
-            <a class="tac">LCS LEADERBOARD</a>
+            <div id="leaderboard" class="flx ja-c">
+                <p class="fs-p p-bck white ts brf">VIEW LEADERBOARD</p>
+            </div>
         </div>
     </div>
 </div>
