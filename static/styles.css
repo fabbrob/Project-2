@@ -88,8 +88,16 @@ body {
     padding: 0 14px;
 }
 
+.fs-p {
+    padding: 28px 56px;
+}
+
 .ftpl {
     padding-left: 50px;
+}
+
+.tplr {
+    padding: 0 20%;
 }
 /* BORDERS */
 
@@ -110,11 +118,23 @@ body {
 }
 
 .gb {
-    outline: 5px solid green;
+    border: 5px solid green;
 }
 
 .rb {
-    outline: 5px solid red;
+    border: 5px solid red;
+}
+
+.tg {
+    border: 5px solid transparent;
+}
+
+.brf {
+    border-radius: 10px;
+}
+
+.brf:hover {
+    outline: 2px solid #290132;
 }
 /* OUTLINES */
 
@@ -185,6 +205,13 @@ body {
     align-items: flex-start;
 }
 
+.as-s {
+    align-self: start;
+}
+.ac-s {
+    align-content: flex-start;
+}
+
 .spc-b {
     justify-content: space-between;
 }
@@ -205,8 +232,13 @@ body {
     gap: 80px;
 }
 
+.twh-g {
+    gap: 40vw;
+}
+
 .hf-g {
-    column-gap: 150px;
+    column-gap: 30px;
+    row-gap: 30px;
 }
 
 /* GRID BOX */
@@ -228,17 +260,17 @@ body {
 
 .three-rows {
     grid-template-columns: 98%;
-    grid-template-rows: 20% 60% 20%;
+    grid-template-rows: 20% 50% 20%;
 }
 
 .gtips {
     grid-template-columns: 98%;
-    grid-template-rows: 5% 30% 1fr 10%;
+    grid-template-rows: 3% 20% 50% 10%;
 }
 
 .glbd {
     grid-template-columns: 98%;
-    grid-template-rows: 20% 1fr;
+    grid-template-rows: 1fr;
 }
 
 /* FONTS / TEXTS */
@@ -253,6 +285,14 @@ body {
 
 .tw-fs {
     font-size: 20px;
+}
+
+.ts-fs {
+    font-size: 36px;
+}
+
+.fe-fs {
+    font-size: 48px;
 }
 
 .ts {
@@ -295,4 +335,8 @@ body {
 
 .ly-bck {
     background-color: lightyellow;
+}
+
+.p-bck {
+    background-color: #6460F0;
 }

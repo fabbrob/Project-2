@@ -7,6 +7,7 @@ DB_URL = os.environ.get("DATABASE_URL", "dbname=esport_tipping")
 class Dashboard:
     def __init__(self, user_id):
         self.previous_week = get_previous_week()
+        self.upcoming_week = self.previous_week + 1
         self.correct_tips = get_correct_tips(user_id)
         self.total_tips = get_total_tips(user_id)
         self.previous_week_tips = get_previous_week_tips(user_id)
@@ -55,7 +56,7 @@ def get_previous_week_tips(user_id):
     results = cur.fetchall()
     for result in results:
         if result[3] == 0:
-            tip_result = ''
+            tip_result = 'tg'
         elif result[2] == result[3]:
             tip_result = 'gb'
         else:
