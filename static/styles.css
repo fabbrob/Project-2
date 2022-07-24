@@ -1,11 +1,10 @@
-html {
-    height: 100%;
-    background-color: lightyellow;
-}
+
 
 body {
     background: rgb(255, 0, 0);
     background: linear-gradient(90deg, rgba(255, 0, 0, 0.75) 0%, rgba(255, 0, 255, 0.5) 50%, rgba(254, 180, 15, 0.75) 100%);
+    height: 99vh;
+    width: 99vw;
 }
 
 /* HEIGHTS N WIDTHS */
@@ -46,10 +45,17 @@ body {
     height: 50%;
 }
 
+.sxs-h {
+    height: 66%;
+}
+
 .nty-h {
     height: 90%;
 }
 
+.nn-h {
+    height: 99%;
+}
 .h-h {
     height: 100%;
 }
@@ -145,6 +151,10 @@ body {
     flex-direction: row;
 }
 
+.fx-w {
+    flex-wrap: wrap;
+}
+
 .ja-c {
     justify-content: center;
     align-items: center;
@@ -199,8 +209,25 @@ body {
 }
 
 .two-rows {
-    grid-template-rows: 10% 1fr;
+    grid-template-columns: 98%;
+    grid-template-rows: 80px 1fr;
 }
+
+.three-rows {
+    grid-template-columns: 98%;
+    grid-template-rows: 20% 60% 20%;
+}
+
+.gtips {
+    grid-template-columns: 98%;
+    grid-template-rows: 10% 30% 1fr;
+}
+
+.glbd {
+    grid-template-columns: 98%;
+    grid-template-rows: 20% 1fr;
+}
+
 /* FONTS / TEXTS */
 
 .bn-f {
@@ -223,6 +250,10 @@ body {
     text-shadow: 2px 2px 1px black;
 }
 
+.tac {
+    text-align: center;
+}
+
 
 /* COLOURS */
 
@@ -232,6 +263,10 @@ body {
 
 .white {
     color: white
+}
+
+.purple {
+    color: #6460F0;
 }
 
 /* BACKGROUNDS */
