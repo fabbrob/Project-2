@@ -17,7 +17,7 @@ def index():
     user_id = session.get("user_id")
     if user_id:
         user_username = session.get("user_username")
-        return render_template('base.html', username=user_username)
+        return render_template('dashboard.html', username=user_username)
     else:
         return redirect('/login')
 
