@@ -5,6 +5,7 @@ import os
 import psycopg2
 import bcrypt
 from models.login import check_login, signup_user, update_profile_in_db, update_password_in_db
+from models.dashboard import Dashboard
 
 DB_URL = os.environ.get("DATABASE_URL", "dbname=esport_tipping")
 SECRET_KEY = os.environ.get("SECRET_KEY", "pretend key for testing only")
@@ -17,7 +18,8 @@ def index():
     user_id = session.get("user_id")
     if user_id:
         user_username = session.get("user_username")
-        return render_template('dashboard.html', username=user_username)
+        dashboard = Dashboard(user_id)
+        return render_template('dashboard.html', username=user_username, dashboard=dashboard)
     else:
         return redirect('/login')
 
@@ -95,6 +97,14 @@ def change_password():
     else:
         return render_template('settings.html', incorrect_password=True)
 
+
+@app.route('/tips')
+def tips():
+    return render_template('base.html')
+
+@app.route('/leaderboard')
+def leaderboard():
+    return render_template('base.html')
 
 if __name__ == "__main__":
     app.run(debug=True)

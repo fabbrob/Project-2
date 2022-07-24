@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 
 {% block script %}
+<script src="static/base.js" defer></script>
 <script src="static/dashboard.js" defer></script>
 {% endblock %}
 
 {% block main %}
-<div id="dashboard" class="grid three-rows ja-c bn-f">
+<div class="grid three-rows ja-c bn-f">
 
     <div id="season" class="nn-h flx-c ja-c">
         <img src="../static/images/LCS.png" class="sxs-h">
@@ -14,26 +15,30 @@
 
     <div id="tips" class="nn-h grid gtips">
 
-        <p>WEEK NUMBER</p>
+        <p>WEEK {{dashboard.previous_week}}</p>
 
         <div class="nn-h grid two-columns">
             <div class="flx ja-c">
-                <p>correcttips</p>
+                <p>{{dashboard.correct_tips}}</p>
             </div>
             <div class="flx ja-c">
-                <p>totaltips</p>
+                <p>{{dashboard.total_tips}}</p>
             </div>
         </div>
 
-        <div id="last_week_tips"  class="nnh flx-r flx-w ja-c">
+        <div class="nnh flx-r flx-w ja-c">
             <p>lastweektips</p>
+        </div>
+
+        <div class="flx ja-c">
+            <p>ENTER NEXT ROUND TIPS</p>
         </div>
     </div>
 
     <div id="leaderboard" class="nn-h grid glbd ja-c">
         <p>YOUR RANKING</p>
         <div class="nn-h grid glbd ja-c">
-            <a class="tac">LCS TIPPING</a>
+            <a class="tac">LCS LEADERBOARD</a>
             <div class="grid two-columns">
                 <p>POSITION</p>
                 <p>IMPROVEMENT</p>

@@ -1,10 +1,10 @@
-logo = document.querySelector('#logo');
-settingsLogo = document.querySelector('#settingsLogo');
+tipsDiv = document.querySelector('#tips')
+leaderboardDiv = document.querySelector('#leaderboard')
 
-logo.addEventListener('click', function () {
-    location.href = '/'
+tipsDiv.addEventListener('click', function () {
+    location.href = '/tips'
 })
 
-settingsLogo.addEventListener('click', function () {
-    location.href = '/settings'
+leaderboardDiv.addEventListener('click', function () {
+    location.href = '/leaderboard'
 })

@@ -220,7 +220,7 @@ body {
 
 .gtips {
     grid-template-columns: 98%;
-    grid-template-rows: 10% 30% 1fr;
+    grid-template-rows: 10% 30% 1fr 10%;
 }
 
 .glbd {
