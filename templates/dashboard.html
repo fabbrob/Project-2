@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block main %}
-<div class="grid three-rows ja-c bn-f">
+<div class="grid three-rows ja-c bn-f ftpl">
 
     <div id="season" class="nn-h flx-c ja-c">
         <img src="../static/images/LCS.png" class="sxs-h">
@@ -26,8 +26,13 @@
             </div>
         </div>
 
-        <div class="nnh flx-r flx-w ja-c">
-            <p>lastweektips</p>
+        <div class="nnh flx-r fx-w j-c a-s hf-g">
+            {% for tip in dashboard.previous_week_tips %}
+            <div class="flx-c ja-c">
+                <img src="{{tip.logo}}" height="100px" class="{{tip.tip_result}}">
+                <p>{{tip.abbreviation}}</p>
+            </div>
+            {% endfor %}
         </div>
 
         <div class="flx ja-c">

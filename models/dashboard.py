@@ -54,10 +54,12 @@ def get_previous_week_tips(user_id):
     cur.execute('SELECT teams.abbreviation, teams.logo, tips.team_tipped_id, matches.winner_id FROM matches INNER JOIN tips ON matches.id = tips.match_id INNER JOIN teams ON tips.team_tipped_id = teams.id WHERE tips.user_id = %s AND matches.week = %s ORDER BY matches.scheduled ASC', [user_id, week_number])
     results = cur.fetchall()
     for result in results:
-        if result[2] == result[3]:
-            tip_result = True
+        if result[3] == 0:
+            tip_result = ''
+        elif result[2] == result[3]:
+            tip_result = 'gb'
         else:
-            tip_result = False
+            tip_result = 'rb'
         tip = {
             'abbreviation': result[0],
             'logo': result[1],
