@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block script %}
+<script src="static/base.js" defer></script>
+{% endblock %}
+
+{% block main %}
+<div>
+     <select>
+        {% for week in tips.weeks %}
+        <option>Week {{week}}</option>
+        {% endfor %}
+     </select>
+     <!-- 
+        amount of correct tips for a specific round
+        total amount of tips so far for user (already have func)
+      -->
+      <div>
+          <span>{{tips.week_score}}</span>
+          <span>current week</span>
+          <br>
+          <span>{{tips.season_score}}</span>
+          <span>season tips</span>
+      </div>
+
+      <!-- 
+        match object
+        with timestamp split into a day and a time
+        with team1 id, abbr, and logo
+        with team2 id, abbr and logo
+        with winner id
+        whether boolean whether tip was correct
+       -->
+
+       
+</div>
+{% endblock %}

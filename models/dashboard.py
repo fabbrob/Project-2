@@ -30,6 +30,7 @@ def get_correct_tips(user_id):
     results = cur.fetchall()
     season_tips = results[0][0]
     cur.execute('SELECT count(matches.id) from matches INNER JOIN tips ON matches.id = tips.match_id WHERE tips.user_id = %s AND matches.week = %s AND matches.winner_id != 0 AND tips.team_tipped_id = matches.winner_id', [user_id, week_number])
+    results = cur.fetchall()
     correct_tips = results[0][0]
     cur.close()
     conn.close()

@@ -9,6 +9,19 @@ class Leaderboard:
     def __init__(self):
         self.leaderboard = get_leaderboard()
 
+    def get_sorted_leaderboard(self):
+        sorted_leaderboard = self.leaderboard
+        for i in range(1, len(sorted_leaderboard)):
+            tipper_to_sort = sorted_leaderboard[i]
+            j = i - 1
+
+            while j >= 0 and sorted_leaderboard[j]['total_tips'] <= tipper_to_sort['total_tips']:
+                sorted_leaderboard[j+1] = sorted_leaderboard[j]
+                j -= 1
+        
+            sorted_leaderboard[j + 1] = tipper_to_sort
+        return sorted_leaderboard
+
 class Leaderboard_Entry:
     def __init__(self, user_id):
         leaderboard = get_leaderboard()

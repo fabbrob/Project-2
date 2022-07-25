@@ -6,6 +6,27 @@
 
 {% block main %}
 <div>
-
+    <div id="titleDiv">
+        <h1>LEADERBOARD</h1>
+        
+        <div>
+            <img src="static/images/LCS_logo.png" width="100px">
+            <span>SUMMER 2022</span>
+        </div>
+    </div>
+    <div id="leaderboard">
+        <div id="heading">
+            <span>RANKING</span>
+            <span>PLAYER</span>
+            <span>TOTAL</span>
+        </div>
+        {% for tipper in leaderboard %}
+        <div>
+            <span>{{tipper.position}}</span>
+            <span>{{tipper.username}}</span>
+            <span>{{tipper.total_tips}}</span>
+        </div>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}

@@ -6,7 +6,8 @@ import psycopg2
 import bcrypt
 from models.login import check_login, signup_user, update_profile_in_db, update_password_in_db
 from models.dashboard import Dashboard
-from models.leaderboard import Leaderboard_Entry
+from models.leaderboard import Leaderboard_Entry, Leaderboard
+from models.tips import Tips
 
 DB_URL = os.environ.get("DATABASE_URL", "dbname=esport_tipping")
 SECRET_KEY = os.environ.get("SECRET_KEY", "pretend key for testing only")
@@ -101,11 +102,14 @@ def change_password():
 
 @app.route('/leaderboard')
 def leaderboard():
-    return render_template('base.html')
+    leaderboard = Leaderboard()
+    return render_template('leaderboard.html', leaderboard=leaderboard.get_sorted_leaderboard())
 
 @app.route('/tips')
 def tips():
-    return render_template('base.html')
+    user_id = session.get("user_id")
+    tips = Tips(user_id, 1)
+    return render_template('tips.html', tips=tips)
 
 @app.route('/ladder')
 def ladder():
