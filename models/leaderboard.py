@@ -46,6 +46,19 @@ def get_leaderboard():
         user['improvement'] = get_improvement(user['id'], leaderboard, prev_leaderboard)
     return leaderboard
 
+def get_sorted_leaderboard(self):
+        sorted_leaderboard = self.leaderboard
+        for i in range(1, len(sorted_leaderboard)):
+            tipper_to_sort = sorted_leaderboard[i]
+            j = i - 1
+
+            while j >= 0 and sorted_leaderboard[j]['total_tips'] <= tipper_to_sort['total_tips']:
+                sorted_leaderboard[j+1] = sorted_leaderboard[j]
+                j -= 1
+        
+            sorted_leaderboard[j + 1] = tipper_to_sort
+        return sorted_leaderboard
+
 def get_leaderboard_up_to_week(week):
     conn = psycopg2.connect(DB_URL)
     cur = conn.cursor()
