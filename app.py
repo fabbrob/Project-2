@@ -101,9 +101,9 @@ def leaderboard():
     data = Leaderboard()
     return render_template('leaderboard.html', data=data)
 
-@app.route('/tips')
-def tips():
-    week = 2
+@app.route('/tips<num>')
+def tips(num):
+    week = num
     user_id = session.get("user_id")
     username = session.get("user_username")
     data = Tips(user_id, week)

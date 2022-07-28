@@ -13,7 +13,7 @@ class Tips:
         self.completed_games = get_total_completed_games_for_week(self.current_week)
         self.season_tips = get_season_tips_for_user(user_id)
         self.weeks = get_list_of_weeks()
-        self.tips = get_matches_for_tips(self.current_week)
+        self.matches = get_matches_for_tips(self.current_week)
 
 class Dashboard:
     def __init__(self, user_id):
@@ -188,7 +188,10 @@ def get_time_until_timestamp(time_to_compare):
     if hours_until > 24:
         days_until = hours_until / 24
         days_until = math.floor(days_until)
-        return f'{days_until} days'
+        if days_until == 1:
+            return f'{days_until} day'
+        else:
+            return f'{days_until} days'
     elif hours_until == 0:
         return '< 1 hour'
     else:
@@ -398,13 +401,13 @@ def get_matches_for_tips(week):
 
 
 def create_matches_for_tips(results):
-    tips = []
+    matches = []
     for result in results:
         if result[8] == 0: #winner_id
             completed = False
         else:
             completed = True
-        tip = {
+        match = {
             'left_id': result[0],
             'left_abbreviation': result[1],
             'left_logo': result[2],
@@ -416,8 +419,8 @@ def create_matches_for_tips(results):
             'match_id': result[6],
             'completed': completed
         }
-        tips.append(tip)
-    return tips
+        matches.append(match)
+    return matches
 
 
 def convert_num_to_numth(num):

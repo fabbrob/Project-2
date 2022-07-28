@@ -238,6 +238,7 @@
     flex-direction: column;
     justify-content: center;
     align-content: center;
+
 }
 
 .tip-image {
@@ -257,6 +258,7 @@
     width: 100px;
     height: 100px;
     outline: 2px solid lightyellow;
+    border-radius: 25px;
 }
 
 .team-abbreviation {
@@ -553,4 +555,85 @@
     height: 40px;
     width: 99%;
     max-width: 300px;
+}
+
+/* TIPS */
+
+.entire-tips {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10vh;
+}
+
+.tip-week-select {
+    width: 300px;
+    height: 40px;
+    text-align: center;
+    font-size: 24px;
+    font-family: 'Bebas Neue', cursive;
+    outline: none;
+}
+
+.list-of-tips {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5vh;
+}
+
+.individual-tip {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.tip-schedule {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.both-teams-div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 5vw;
+    padding: 1vw;
+}
+
+.individual-team-tip {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2vw;
+    outline: 2px solid lightyellow;
+    border-radius: 25px;
+    gap: 10px;
+}
+
+.versus-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tip-abbreviation {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 30px;
+    text-shadow:  1px 1px 1px black;
+    color: white;
+}
+
+.date-time {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 20px;
+    text-shadow:  1px 1px 1px black;
+    color: white;
 }

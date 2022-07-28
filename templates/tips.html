@@ -5,4 +5,44 @@
 {% endblock %}
 
 {% block main %}
+
+<div class="entire-tips">
+    <select name="tip-week" class="tip-week-select">
+        {% for week in data.weeks %}
+        {% if week|string() == data.current_week %}
+        <option selected value="{{week}}">Week {{week}}</option>
+        {% else %}
+        <option value="{{week}}">Week {{week}}</option>
+        {% endif %}
+        {% endfor %}
+    </select>
+
+    <div class="list-of-tips">
+        {% for match in data.matches %}
+        <div class="individual-tip">
+            <div class="tip-schedule">
+                <span class="date-time">{{match.date}}</span>
+                <span class="date-time">{{match.time}}</span>
+            </div>
+            <div class="both-teams-div">
+                <div class="individual-team-tip">
+                    <img src="{{match.left_logo}}" height="100px">
+                    <span class="tip-abbreviation">{{match.left_abbreviation}}</span>
+                </div>
+                <div class="versus-div">
+                    <img src="../static/images/vs.jpg" height="30px">
+                </div>
+                <div class="individual-team-tip">
+                    <img src="{{match.right_logo}}" height="100px">
+                    <span class="tip-abbreviation">{{match.right_abbreviation}}</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div>
+            SAVE TIPS BUTTON GOES HERE
+        </div>
+    </div>
+</div>
 {% endblock %}
