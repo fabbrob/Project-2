@@ -5,33 +5,33 @@
 {% endblock %}
 
 {% block main %}
-<div class="bn-f tsl white flx-r ja-c th-g ly-bck h-h">
-    <div class="div-b th-vw egh-vh m-f-t fs-g">
-        <h1>UPDATE PROFILE SETTINGS</h1>
-        <form action="/update_profile" method="POST" class="flx-c a-s j-s f-g">
+<div class="entire-settings">
+    <div class="setting-form-div">
+        <h1 class="setting-form-title">UPDATE PROFILE</h1>
+        <form action="/update_profile" method="POST" class="setting-form">
             <h3>USERNAME:</h3>
-            <input required type="text" name="username" placeholder="{{ username }}" class="f-w fry-h ft-p n-o bb xt-fs">
+            <input required type="text" name="username" value="{{ username }}" class="setting-input">
             <h3>EMAIL:</h3>
-            <input required type="text" name="email" placeholder="{{ email }}" class="f-w fry-h ft-p n-o bb xt-fs">
-            <button type="submit" class="f-w th-xw fry-h m-f-t">UPDATE PROFILE</button>
+            <input required type="text" name="email" value="{{ email }}" class="setting-input">
+            <button type="submit" class="setting-button">UPDATE PROFILE</button>
         </form>
     </div>
-    <div class="div-b th-vw egh-vh m-f-t fs-g">
-        <h1>CHANGE PASSWORD</h1>
-        <form action="/change_password" method="POST" class="flx-c a-s j-s f-g">
+    <div class="setting-form-div">
+        <h1 class="setting-form-title">CHANGE PASSWORD</h1>
+        <form action="/change_password" method="POST" class="setting-form">
             <h3>ENTER CURRENT PASSWORD:</h3>
             {% if incorrect_password %}
-            <p class="red">INCORRECT PASSWORD</p>
+            <p class="setting-error">INCORRECT PASSWORD</p>
             {% endif %}
-            <input required type="password" name="password" placeholder="Current Password" class="f-w fry-h ft-p n-o bb xt-fs">
+            <input required type="password" name="password" placeholder="Current Password" class="setting-input">
             <h3>NEW PASSWORD:</h3>
-            <input required type="password" name="new_password" placeholder=" New Password" class="f-w fry-h ft-p n-o bb xt-fs">
+            <input required type="password" name="new_password" placeholder=" New Password" class="setting-input">
             <h3>CONFIRM NEW PASSWORD:</h3>
-            <input required type="password" name="confirm_password" placeholder="Confirm Password" class="f-w fry-h ft-p n-o bb xt-fs">
+            <input required type="password" name="confirm_password" placeholder="Confirm Password" class="setting-input">
             {% if password_error %}
-            <p class="red">NEW PASSWORD DOESN'T MATCH</p>
+            <p class="setting-error">NEW PASSWORD DOESN'T MATCH</p>
             {% endif %}
-            <button type="submit" class="f-w th-xw fry-h m-f-t">CHANGE PASSWORD</button>
+            <button type="submit" class="setting-button">CHANGE PASSWORD</button>
         </form>
     </div>
 </div>

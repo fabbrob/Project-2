@@ -5,33 +5,28 @@
 {% endblock %}
 
 {% block content %}
-<div class="mrg-c nn-vh nn-vw">
-    <div class="th-vw th-mw egh-vh flx-c j-s a-c mrg-c m-f-t f-g bn-f">
-        <img src="../static/images/four-sixths-tipping.png" class="th-xw">
-        <div class="grid two-columns f-w tw-fs ts white">
-            <div id="loginDiv" class="f-w flx-c ja-c trl-b">
+<div class="entire-login">
+    <div class="login-content-div">
+        <img src="../static/images/four-sixths-tipping.png" class="login-logo">
+        <div class="form-selector">
+            <div id="loginDiv" class="selector-div selected">
                 <p>LOG IN</p>
             </div>
-            <div id="signupDiv" class="f-w  flx-c ja-c b-b">
+            <div id="signupDiv" class="selector-div not-selected">
                 <p>SIGN UP</p>
             </div>
         </div>
-        <form id="userForm" action='/login' method='POST' class="flx-c ja-c tn-g f-w">
-            <input name="email" type="text" placeholder="Email" class="f-w fry-h ft-p n-o bb xt-fs">
-            <input name="password" type="password" placeholder="Password" class="f-w fry-h ft-p n-o bb xt-fs">
-            <button type="submit" class="f-w th-xw fry-h">LOG IN</button>
+        <form id="userForm" action='/login' method='POST' class="user-form">
+            <input name="email" type="text" placeholder="Email" class="login-input">
+            <input name="password" type="password" placeholder="Password" class="login-input">
+            <button type="submit" class="login-button">LOG IN</button>
         </form>
         {% if login_error %}
-        <p class="red">INCORRECT EMAIL OR PASSWORD</p>
+        <p class="login-error">INCORRECT EMAIL OR PASSWORD</p>
         {% endif %}
         {% if signup_error %}
-        <p class="red">PASSWORDS DID NOT MATCH</p>
+        <p class="login-error">PASSWORDS DID NOT MATCH</p>
         {% endif %}
     </div>
 </div>
 {% endblock %}
-
-green 0 255 0
-blue 0 0 255
-red 255 0 0
-yellow 254 180 15

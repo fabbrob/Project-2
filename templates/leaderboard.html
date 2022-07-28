@@ -5,26 +5,34 @@
 {% endblock %}
 
 {% block main %}
-<div>
-    <div id="titleDiv">
-        <h1>LEADERBOARD</h1>
+<div class="entire-leaderboard">
+    <div>
+        <h1 class="leaderboard-title">LEADERBOARD</h1>
         
-        <div>
-            <img src="static/images/LCS_logo.png" width="100px">
-            <span>SUMMER 2022</span>
+        <div class="season-title-div">
+            <img src="static/images/LCS_logo.png" height="75px">
+            <span class="season-title">SUMMER 2022</span>
         </div>
     </div>
-    <div id="leaderboard">
-        <div id="heading">
-            <span>RANKING</span>
-            <span>PLAYER</span>
-            <span>TOTAL</span>
+    <div class="leaderboard">
+        <div id="heading" class="leaderboard-column-names">
+            <span class="column-name">RANKING</span>
+            <span class="column-name">POSITION CHANGE</span>
+            <span class="column-name">PLAYER</span>
+            <span class="column-name">TOTAL</span>
         </div>
-        {% for tipper in leaderboard %}
-        <div>
-            <span>{{tipper.position}}</span>
-            <span>{{tipper.username}}</span>
-            <span>{{tipper.total_tips}}</span>
+        {% for user in data.leaderboard%}
+        <div class="user-div">
+            <span class="user-column-data">{{user.ranking}}</span>
+            {%if user.improvement == 0%}
+            <img src="static/images/grey_minus.png" height="20px" class="user-improvement-img">
+            {% elif user.improvement > 0 %}
+            <img src="static/images/green_triangle.png" height="20px" class="user-improvement-img">
+            {% else %}
+            <img src="static/images/red_triangle.png" height="20px" class="user-improvement-img">
+            {% endif %}
+            <span class="user-column-data">{{user.username}}</span>
+            <span class="user-column-data">{{user.tip_score}}</span>
         </div>
         {% endfor %}
     </div>

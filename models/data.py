@@ -1,32 +1,61 @@
 import os
-from sqlite3 import connect
-from time import time
-from unittest import result
+from typing import final
 import psycopg2
 from datetime import datetime, date
+import math
 
 DB_URL = os.environ.get("DATABASE_URL", "dbname=esport_tipping")
 
-#DASHBOARD
+class Tips:
+    def __init__(self, user_id, week):
+        self.current_week = week
+        self.correct_tips = get_users_correct_tips_for_week(user_id, self.current_week)
+        self.completed_games = get_total_completed_games_for_week(self.current_week)
+        self.season_tips = get_season_tips_for_user(user_id)
+        self.weeks = get_list_of_weeks()
+        self.tips = get_matches_for_tips(self.current_week)
+
+class Dashboard:
+    def __init__(self, user_id):
+        self.closest_week = get_closest_week()
+        self.last_completed_week = get_last_completed_week()
+        #booleans
+        self.complete = is_week_complete(self.closest_week)
+        self.current = is_week_current(self.closest_week)
+        self.upcoming = is_week_upcoming(self.closest_week)
+        self.tips_entered = has_week_been_tipped_by_user(user_id, self.closest_week)
+
+        #getters
+        self.current_correct_tips = get_users_correct_tips_for_week(user_id, self.closest_week)
+        self.current_completed_games = get_total_completed_games_for_week(self.closest_week)
+        self.completed_correct_tips = get_users_correct_tips_for_week(user_id, self.last_completed_week)
+        self.completed_completed_games = get_total_completed_games_for_week(self.last_completed_week)
+        self.season_tips = get_season_tips_for_user(user_id)
+        self.current_tips = get_tips_for_dashboard(user_id, self.closest_week)
+        self.completed_tips = get_tips_for_dashboard(user_id, self.last_completed_week)
+        self.matches = get_matches_for_dashboard(self.closest_week)
+        self.ranking = get_user_ranking_for_week(user_id, self.closest_week)
+        self.improvement = get_user_leaderboard_improvement(user_id, self.closest_week-1, self.closest_week)
+        self.time_until_next_week = get_time_until_next_match()
+
+class Leaderboard:
+    def __init__(self):
+        self.closest_week = get_closest_week()
+        self.leaderboard = get_leaderboard_for_leaderboard(get_leaderboard(self.closest_week), self.closest_week)
+
 
 def get_time_difference_of_timestamps(time1, time2):
-    timestamp1 = convert_timestamp_into_timedelta(time1)
-    timestamp2 = convert_timestamp_into_timedelta(time2)
-    if timestamp1 > timestamp2:
-        time_diff = timestamp1 - timestamp2
+    if time1 > time2:
+        time_diff = time1 - time2
     else:
-        time_diff = timestamp2 - timestamp1
+        time_diff = time2 - time1
     difference_in_seconds = time_diff.total_seconds()
     return difference_in_seconds
 
 
 def convert_seconds_to_hours(seconds):
-    return seconds % 3600
-
-
-def convert_timestamp_into_timedelta(timestamp):
-    format = '%Y-%m-%d %H:%M:%S'
-    return datetime.strptime(timestamp, format)
+    hours = seconds / 3600
+    return math.floor(hours)
 
 
 def get_closest_week():
@@ -85,7 +114,7 @@ def is_now_after_week(week):
     cur.close()
     conn.close()
     timestamp = result[0][0]
-    time_of_last_game = convert_timestamp_into_timedelta(timestamp)
+    time_of_last_game = timestamp
     return time_of_last_game < time_now
 
 
@@ -107,7 +136,6 @@ def is_week_results_filled(week):
     
 
 def is_week_current(week):
-    closest_week = get_closest_week()
     time_now = datetime.now()
     conn = psycopg2.connect(DB_URL)
     cur = conn.cursor()
@@ -117,36 +145,49 @@ def is_week_current(week):
                 WHERE week = %s
                 ORDER BY scheduled ASC
                 LIMIT 1
-                ''', [closest_week])
-    result = cur.fetchall
-    timestamp = result[0][0]
-    first_match_timedelta = convert_timestamp_into_timedelta(timestamp)
+                ''', [week])
+    result = cur.fetchall()
+    first_match = result[0][0]
     cur.execute('''
                 SELECT scheduled
                 FROM matches
                 WHERE week = %s
                 ORDER BY scheduled DESC
                 LIMIT 1
-                ''', [closest_week])
-    result = cur.fetchall
+                ''', [week])
+    result = cur.fetchall()
     cur.close()
     conn.close()
-    timestamp = result[0][0]
-    last_match_timedelta = convert_timestamp_into_timedelta(timestamp)
-    return time_now > first_match_timedelta and time_now < last_match_timedelta
+    last_match = result[0][0]
+    return time_now > first_match and time_now < last_match
     
 
 def is_week_upcoming(week):
     return not is_week_complete(week) and not is_week_current(week)
 
+def get_last_completed_week():
+    week = get_closest_week()
+    conn = psycopg2.connect(DB_URL)
+    cur = conn.cursor()
+    cur.execute('''
+                SELECT winner_id
+                FROM matches
+                WHERE week = %s
+                ''', [week])
+    results = cur.fetchall()
+    for result in results:
+        if result[0] == 0:
+            return week - 1
+    return week
 
-def get_time_until_timestamp(timestamp):
+def get_time_until_timestamp(time_to_compare):
     time_now = datetime.now()
-    time_to_compare = convert_timestamp_into_timedelta(timestamp)
     time_diff = get_time_difference_of_timestamps(time_now, time_to_compare)
+    time_diff = math.floor(time_diff)
     hours_until = convert_seconds_to_hours(time_diff)
     if hours_until > 24:
-        days_until = hours_until % 24
+        days_until = hours_until / 24
+        days_until = math.floor(days_until)
         return f'{days_until} days'
     elif hours_until == 0:
         return '< 1 hour'
@@ -162,7 +203,7 @@ def get_time_until_next_match():
                 SELECT scheduled
                 FROM matches
                 WHERE scheduled > %s
-                ORDER BY DESC
+                ORDER BY scheduled ASC
                 LIMIT 1
                 ''', [time_now])
     result = cur.fetchall()
@@ -256,20 +297,42 @@ def get_season_tips_for_user(user_id):
     conn.close()
     return result[0][0]
 
+def get_matches_for_dashboard(week):
+    conn = psycopg2.connect(DB_URL)
+    cur = conn.cursor()
+    cur.execute('''
+                SELECT blue.abbreviation, red.abbreviation
+                FROM matches
+                INNER JOIN teams blue ON blue.id = matches.team1_id
+                INNER JOIN teams red ON red.id = matches.team2_id
+                WHERE matches.week = %s
+                ORDER BY matches.scheduled ASC
+                ''', [week])
+    results = cur.fetchall()
+    cur.close()
+    conn.close()
+    return create_matches_for_dashboard(results)
+
+def create_matches_for_dashboard(results):
+    matches = []
+    for result in results:
+        match = {
+                'left_team_abbreviation': result[0],
+                'right_team_abbreviation': result[1],
+        }
+        matches.append(match)
+    return matches
 
 def get_tips_for_dashboard(user_id, week):
     conn = psycopg2.connect(DB_URL)
     cur = conn.cursor()
-    cur.execute('''
-                SELECT left.id, left.abbreviation, left.logo,
-                right.id, right.abbreviation, right.logo,
-                tips.team_tipped_id, matches.winner_id
-                FROM tips
-                FULL JOIN matches on tips.match_id = matches.id
-                INNER JOIN teams left on left.id = matches.team1_id
-                INNER JOIN teams right on right.id = matches.team2_id
-                WHERE matches.week = %s
-                AND tips.user_id = %s
+    cur.execute('''SELECT blue.id, blue.abbreviation, blue.logo,
+                red.id, red.abbreviation, red.logo,
+                tips.team_tipped_id, matches.winner_id 
+                FROM tips FULL JOIN matches ON tips.match_id = matches.id
+                INNER JOIN teams blue ON blue.id = matches.team1_id
+                INNER JOIN teams red ON red.id = matches.team2_id
+                WHERE matches.week = %s AND tips.user_id = %s
                 ORDER BY matches.scheduled ASC
                 ''', [week, user_id])
     results = cur.fetchall()
@@ -315,83 +378,44 @@ def create_tips_for_dashboard(results):
     return tips
 
 
-def get_tips_for_tips(user_id, week):
+def get_matches_for_tips(week):
     conn = psycopg2.connect(DB_URL)
     cur = conn.cursor()
     cur.execute('''
-                SELECT left.id, left.abbreviation, left.logo,
-                right.id, right.abbreviation, right.logo,
-                tips.team_tipped_id, matches.id,
-                matches.winner_id, matches_scheduled
-                FROM tips
-                FULL JOIN matches ON tips.match_id = matches.id
-                INNER JOIN teams left ON left.id = matches.team1_id
-                INNER JOIN teams right ON right.id = matches.team2_id
+                SELECT blue.id, blue.abbreviation, blue.logo,
+                red.id, red.abbreviation, red.logo,
+                matches.id, matches.scheduled, matches.winner_id
+                FROM matches
+                INNER JOIN teams blue ON blue.id = matches.team1_id
+                INNER JOIN teams red ON red.id = matches.team2_id
                 WHERE matches.week = %s
-                AND tips.user_id = %s
                 ORDER BY matches.scheduled ASC
-                ''', [week, user_id])
+                ''', [week])
     results = cur.fetchall()
     cur.close()
     conn.close()
-    return create_tips_for_tips(results)
+    return create_matches_for_tips(results)
 
 
-def create_tips_for_tips(results):
+def create_matches_for_tips(results):
     tips = []
     for result in results:
         if result[8] == 0: #winner_id
             completed = False
-            tip = {
-                'left_id': result[0],
-                'left_abbreviation': result[1],
-                'left_logo': result[2],
-                'right_id': result[3],
-                'right_abbreviation': result[4],
-                'right_logo': result[5],
-                'date': get_date_from_timestamp(result[9]),
-                'time': get_time_from_timestamp(result[9]),
-                'match_id': result[7],
-                'team_tipped_id': result[6],
-                'completed': completed
-            }
         else:
             completed = True
-
-        if completed:
-            if result[8] == result[6]: #winner_id == team_tipped_id
-                tip_correct = True
-            else:
-                tip_correct = False
-        
-        if result[0] == result[6]: #left.id == team_tipped_id
-            tip = {
-                'left_id': result[0],
-                'left_abbreviation': result[1],
-                'left_logo': result[2],
-                'right_id': result[3],
-                'right_abbreviation': result[4],
-                'right_logo': result[5],
-                'date': get_date_from_timestamp(result[9]),
-                'time': get_time_from_timestamp(result[9]),
-                'team_picked': 'left',
-                'tip_correct': tip_correct,
-                'completed': completed
-            }
-        else:
-            tip = {
-                'left_id': result[0],
-                'left_abbreviation': result[1],
-                'left_logo': result[2],
-                'right_id': result[3],
-                'right_abbreviation': result[4],
-                'right_logo': result[5],
-                'date': get_date_from_timestamp(result[9]),
-                'time': get_time_from_timestamp(result[9]),
-                'team_picked': 'right',
-                'tip_correct': tip_correct,
-                'completed': completed
-            }
+        tip = {
+            'left_id': result[0],
+            'left_abbreviation': result[1],
+            'left_logo': result[2],
+            'right_id': result[3],
+            'right_abbreviation': result[4],
+            'right_logo': result[5],
+            'date': get_date_from_timestamp(result[7]),
+            'time': get_time_from_timestamp(result[7]),
+            'match_id': result[6],
+            'completed': completed
+        }
         tips.append(tip)
     return tips
 
@@ -409,6 +433,7 @@ def convert_num_to_numth(num):
 
 
 def get_date_from_timestamp(timestamp):
+    timestamp = str(timestamp)
     date_and_time = timestamp.split(' ')
     date_hyphened = date_and_time[0]
     date_arr = date_hyphened.split('-')
@@ -419,12 +444,13 @@ def get_date_from_timestamp(timestamp):
     weekday_arr = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     weekday = weekday_arr[weekday_num]
     month_arr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-    month = month_arr[month_int]
+    month = month_arr[month_int - 1]
     dayth = convert_num_to_numth(day_int)
     return f'{weekday} {dayth} {month} {year_int}'
 
 
 def get_time_from_timestamp(timestamp):
+    timestamp = str(timestamp)
     date_and_time = timestamp.split(' ')
     time_coloned = date_and_time[1]
     time = time_coloned.split(':')
@@ -438,7 +464,7 @@ def get_time_from_timestamp(timestamp):
     return f'{hour_int}:{minute_int} {meridian}'
 
 
-def get_leaderboard_for_leaderboard(week):
+def get_leaderboard(week):
     conn = psycopg2.connect(DB_URL)
     cur = conn.cursor()
     cur.execute('''
@@ -446,22 +472,22 @@ def get_leaderboard_for_leaderboard(week):
                 FROM users
                 INNER JOIN tips ON users.id = tips.user_id
                 INNER JOIN matches ON tips.match_id = matches.id
-                WHERE matches.week <= week
+                WHERE matches.week <= %s
                 AND matches.winner_id = tips.team_tipped_id
                 GROUP BY users.id
-                ORDER BY COUNT(matches.id)
-                ''')
+                ORDER BY COUNT(matches.id) DESC
+                ''', [week])
     results = cur.fetchall()
     cur.close()
     conn.close()
-    return create_leaderboard_for_leaderboard(results)
+    return create_leaderboard(results)
 
 
-def create_leaderboard_for_leaderboard(results):
+def create_leaderboard(results):
     leaderboard = []
     for result in results:
         user = {
-           'id': result[0],
+            'id': result[0],
             'username': result[1],
             'tip_score': result[2]
         }
@@ -485,24 +511,39 @@ def create_leaderboard_for_leaderboard(results):
     return leaderboard
 
 
-def user_leaderboard_improvement (user_id, initial_week, final_week):
-    leaderboard_initial = get_leaderboard_for_leaderboard(initial_week)
+def get_user_leaderboard_improvement(user_id, initial_week, final_week):
+    leaderboard_initial = get_leaderboard(initial_week)
     for user in leaderboard_initial:
         if user['id'] == user_id:
             position_initial = user['position']
     
-    leaderboard_final = get_leaderboard_for_leaderboard(final_week)
+    leaderboard_final = get_leaderboard(final_week)
     for user in leaderboard_final:
         if user['id'] == user_id:
             position_final = user['position']
     
     leaderboard_improvement = position_initial - position_final
     if leaderboard_improvement > 0:
-        return f'+{leaderboard_improvement}'
+        return leaderboard_improvement
     elif leaderboard_improvement < 0:
-        return f'-{leaderboard_improvement}'
+        return leaderboard_improvement
     else:
-        return '='
+        return 0
+
+def get_leaderboard_for_leaderboard(leaderboard, final_week):
+    initial_week = final_week - 1
+    for user in leaderboard:
+        user_id = user['id']
+        user['improvement'] = get_user_leaderboard_improvement(user_id, initial_week, final_week)
+    return leaderboard
+
+def get_user_ranking_for_week(user_id, week):
+    leaderboard = get_leaderboard(week)
+    for user in leaderboard:
+        if user['id'] == user_id:
+            position = user['position']
+            return convert_num_to_numth(position)
+    return
 
 
 def convert_numth_to_num(numth):
@@ -510,3 +551,16 @@ def convert_numth_to_num(numth):
     number_end = length - 2
     num_str = numth[0:number_end]
     return int(num_str)
+
+
+def get_list_of_weeks():
+    conn = psycopg2.connect(DB_URL)
+    cur = conn.cursor()
+    cur.execute('SELECT DISTINCT week FROM matches ORDER BY week ASC')
+    results = cur.fetchall()
+    cur.close()
+    conn.close()
+    weeks = []
+    for result in results:
+        weeks.append(result[0])
+    return weeks

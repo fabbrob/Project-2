@@ -2,14 +2,14 @@
 
 {% block content %}
 
-<div class="h-h grid two-rows">
-    <div class="grid three-columns">
+<div class="entire-content">
+    <div class="header">
         <div>
             <img id='logo' src="../static/images/four-sixths-tipping.png" width="75px">
         </div>
-        <div class="m-r-f flx a-c j-e bn-f tw-fs ts white">
-            <p class="m-r-t">LOGGED IN AS: {{ username }}</p>
-            <a href="/logout">LOG OUT</a>
+        <div class="login-status-div">
+            <p class="login-status">LOGGED IN AS: <span class="user">{{ username }}</span></p>
+            <a href="/logout" class="logout-link">LOG OUT</a>
         </div>
         <div>
             <img id='settingsLogo' src="../static/images/settings.png" width="75px">

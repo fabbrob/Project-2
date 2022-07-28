@@ -6,57 +6,141 @@
 {% endblock %}
 
 {% block main %}
-<div class="grid three-rows ja-c bn-f ftpl">
+<div class="dashboard">
 
-    <div class="nn-h flx-c ja-c">
-        <img src="../static/images/LCS.png" class="sxs-h">
-        <p class="tw-fs purple">SUMMER 2022</p>
+    <div class="title-div">
+        <img src="../static/images/LCS.png" class="title-image">
+        <p class="season-heading">SUMMER 2022</p>
     </div>
 
-    <div class="nn-h flx-c ja-c white ts">
+    <div class="current-week-tips-div">
 
-        <p class="as-s ts-fs">WEEK {{dashboard.current_week}}</p>
+        <span class="current-week">WEEK {{data.closest_week}}</span>
 
-        <div class="nn-h f-w flx-r ja-c twh-g">
-            <div class="flx-c ja-c">
-                <span class="fe-fs">{{dashboard.correct_tips}}</span>
-                <span class="tw-fs">CORRECT TIPS</span>
+        <div class="tips-information-div">
+            <div class="correct-tips-div">
+                {% if data.upcoming %}
+                <span class="data">{{data.time_until_next_week}}</span>
+                <span class="data-label">UNTIL WEEK START</span>
+                {% else %}
+                <span class="data">{{data.current_correct_tips}}/{{data.current_completed_games}}</span>
+                <span class="data-label">CORRECT TIPS</span>
+                {% endif %}
             </div>
-            <div class="flx-c ja-c">
-                <span class="fe-fs">{{leaderboard.season_tips}}</span> 
-                <span class="tw-fs">SEASON TIPS</span>
+            {% if not data.upcoming %}
+            <div class="season-tips-div">
+                <span class="data">{{data.season_tips}}</span>
+                <span class="data-label">SEASON TIPS</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="tips-collection-div">
+            {% if data.tips_entered %}
+            {% for tip in data.current_tips %}
+            <div class="tip-div">
+                <div class="tip-image" style='background-image:url(../{{tip.logo}});'>
+                    {% if tip.tip_correct %}
+                    <img src="static/images/tick.png" height="30px" width="30px">
+                    {% else %}
+                    <img src="static/images/cross.png" height="30px" width="30px">
+                    {% endif %}
+                </div>
+                <span class="tip-abbreviation">{{tip.abbreviation}}</span>
+            </div>
+            {% endfor %}
+            {% else %}
+            {% for match in data.matches %}
+            <div class="match-div">
+                <div class="match">
+                    <span class="team-abbreviation">{{match.left_team_abbreviation}}</span>
+                    <img src="../static/images/vs.jpg" height="20px">
+                    <span class="team-abbreviation">{{match.right_team_abbreviation}}</span>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+
+        <div id="enterTips" data-week="{{data.closest_week}}" class="tips-button-div">
+            {% if data.tips_entered %}
+            <p class="tips-button-text">EDIT TIPS</p>
+            {% else %}
+            <p class="tips-button-text">ENTER TIPS</p>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if data.upcoming %}
+    <div class="latest-results-div">
+
+        <div class="latest-results-heading-div">
+            <span class="latest-results-heading">LATEST RESULTS</span>
+            <span class="latest-results-subheading">FROM WEEK {{data.last_completed_week}}</span>
+        </div>
+
+        <div class="latest-results-information-div">
+            <div class="correct-tips-div">
+                <span class="data">{{data.completed_correct_tips}}/{{data.completed_completed_games}}</span>
+                <span class="data-label">CORRECT TIPS</span>
+            </div>
+            <div class="season-tips-div">
+                <span class="data">{{data.season_tips}}</span>
+                <span class="data-label">SEASON TIPS</span>
             </div>
         </div>
 
-        <div class="nnh flx-r fx-w j-c ac-s hf-g tplr">
-            {% for tip in dashboard.current_week_tips %}
-            <div class="flx-c ja-c">
-                <img src="{{tip.logo}}" height="100px" class="{{tip.tip_result}}">
-                <p>{{tip.abbreviation}}</p>
+        <div class="tips-collection-div">
+            {% for tip in data.completed_tips %}
+            <div class="previous-tip-div">
+                <div class="previous-tip-image" style='background-image:url(../{{tip.logo}});'>
+                    {% if tip.tip_correct %}
+                    <img src="static/images/tick.png" height="20px" width="20px">
+                    {% else %}
+                    <img src="static/images/cross.png" height="20px" width="20px">
+                    {% endif %}
+                </div>
+                <span class="tip-abbreviation">{{tip.abbreviation}}</span>
             </div>
             {% endfor %}
         </div>
 
-        <div id="enterTips" class="flx ja-c">
-            <p class="fs-p p-bck white ts brf">ENTER WEEK {{dashboard.upcoming_week}} TIPS</p>
+        <div id="enterTips" data-week="{{data.last_completed_week}}" class="tips-button-div">
+            <p class="tips-button-text">VIEW RESULTS</p>
         </div>
     </div>
 
-    <div class="nn-h flx-c ja-c ts  white">
-            <div class="flx-r ja-c twh-g">
-                <div class="flx-c ja-c">
-                    <span class="fe-fs">{{leaderboard.position}}</span>
-                    <span class="tw-fs">LADDER POSITION</span>
-                </div>
-                <div class="flx-c ja-c">
-                    <span class="fe-fs">{{leaderboard.improvement}}</span>
-                    <span class="tw-fs">LADDER IMPROVEMENT</span>
-                </div>
+    {% endif %}
+
+
+    <div class="leaderboard-div">
+
+        <span class="leaderboard-heading">LEADERBOARD</span>
+
+        <div class="leaderboard-information">
+            <div class="ladder-position-div">
+                <span class="data">{{data.ranking}}</span>
+                <span class="data-label">LADDER POSITION</span>
             </div>
-            <div id="leaderboard" class="flx ja-c">
-                <p class="fs-p p-bck white ts brf">VIEW LEADERBOARD</p>
+            <div class="ladder-improvement-div">
+                <div class="ladder-improvement-info">
+                    {%if data.improvement == 0%}
+                    <img src="static/images/grey_minus.png" height="20px" style="margin-bottom: 25px;"
+                        class="ladder-improvement-image">
+                    {% elif data.improvement > 0 %}
+                    <img src="static/images/green_triangle.png" height="20px" class="ladder-improvement-image">
+                    <span class="data green">{{data.improvement}}</span>
+                    {% else %}
+                    <img src="static/images/red_triangle.png" height="20px" class="ladder-improvement-image">
+                    <span class="data red">{{data.improvement}}</span>
+                    {% endif %}
+                </div>
+                <span class="data-label">LADDER IMPROVEMENT</span>
             </div>
         </div>
+        <div id="leaderboard" class="leaderboard-button-div">
+            <p class="leaderboard-button-text">VIEW LEADERBOARD</p>
+        </div>
     </div>
-</div>
-{% endblock %}
+
+    {% endblock %}

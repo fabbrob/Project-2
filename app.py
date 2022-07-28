@@ -5,9 +5,7 @@ import os
 import psycopg2
 import bcrypt
 from models.login import check_login, signup_user, update_profile_in_db, update_password_in_db
-from models.dashboard import Dashboard
-from models.leaderboard import Leaderboard_Entry, Leaderboard
-from models.tips import Tips
+from models.data import Dashboard, Leaderboard, Tips
 
 DB_URL = os.environ.get("DATABASE_URL", "dbname=esport_tipping")
 SECRET_KEY = os.environ.get("SECRET_KEY", "pretend key for testing only")
@@ -20,9 +18,8 @@ def index():
     user_id = session.get("user_id")
     if user_id:
         user_username = session.get("user_username")
-        dashboard = Dashboard(user_id)
-        leaderboard_entry = Leaderboard_Entry(user_id)
-        return render_template('dashboard.html', username=user_username, dashboard=dashboard, leaderboard=leaderboard_entry)
+        data = Dashboard(user_id)
+        return render_template('dashboard.html', username=user_username, data=data)
     else:
         return redirect('/login')
 
@@ -66,7 +63,6 @@ def signup():
     confirm_password = request.form.get('confirm_password')
     if password == confirm_password:
         signup_user(username, email, password)
-        # CHANGE THIS REDIRECT TO A LOGIN WHEN YOUR USER HAS SOMEWHERE TO GO
         return redirect('/') 
     else:
         return render_template('login.html', signup_error=True)
@@ -102,14 +98,16 @@ def change_password():
 
 @app.route('/leaderboard')
 def leaderboard():
-    leaderboard = Leaderboard()
-    return render_template('leaderboard.html', leaderboard=leaderboard.get_sorted_leaderboard())
+    data = Leaderboard()
+    return render_template('leaderboard.html', data=data)
 
 @app.route('/tips')
 def tips():
+    week = 2
     user_id = session.get("user_id")
-    tips = Tips(user_id, 1)
-    return render_template('tips.html', tips=tips)
+    username = session.get("user_username")
+    data = Tips(user_id, week)
+    return render_template('tips.html', username=username, data=data)
 
 @app.route('/ladder')
 def ladder():
