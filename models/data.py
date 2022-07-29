@@ -38,7 +38,7 @@ class Dashboard:
         self.completed_tips = get_tips_for_dashboard(user_id, self.last_completed_week)
         self.matches = get_matches_for_dashboard(self.closest_week)
         self.ranking = get_user_ranking_for_week(user_id, self.closest_week)
-        self.improvement = get_user_leaderboard_improvement(user_id, self.closest_week-1, self.closest_week)
+        self.improvement = get_user_leaderboard_improvement(user_id, self.last_completed_week-1, self.last_completed_week)
         self.time_until_next_week = get_time_until_next_match()
 
 class Leaderboard:
