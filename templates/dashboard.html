@@ -40,10 +40,12 @@
             {% for tip in data.current_tips %}
             <div class="tip-div">
                 <div class="tip-image" style='background-image:url(../{{tip.logo}});'>
+                    {% if tip.completed %}
                     {% if tip.tip_correct %}
                     <img src="static/images/tick.png" height="30px" width="30px">
                     {% else %}
                     <img src="static/images/cross.png" height="30px" width="30px">
+                    {% endif %}
                     {% endif %}
                 </div>
                 <span class="tip-abbreviation">{{tip.abbreviation}}</span>

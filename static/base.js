@@ -2,9 +2,9 @@ logo = document.querySelector('#logo');
 settingsLogo = document.querySelector('#settingsLogo');
 
 logo.addEventListener('click', function () {
-    location.href = '/'
+    location.href = '/';
 })
 
 settingsLogo.addEventListener('click', function () {
-    location.href = '/settings'
+    location.href = '/settings';
 })

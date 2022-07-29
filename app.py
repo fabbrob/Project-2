@@ -5,7 +5,7 @@ import os
 import psycopg2
 import bcrypt
 from models.login import check_login, signup_user, update_profile_in_db, update_password_in_db
-from models.data import Dashboard, Leaderboard, Tips
+from models.data import Dashboard, Leaderboard, Tips, does_tip_exist, update_tip, create_tip
 
 DB_URL = os.environ.get("DATABASE_URL", "dbname=esport_tipping")
 SECRET_KEY = os.environ.get("SECRET_KEY", "pretend key for testing only")
@@ -16,6 +16,7 @@ app.config['SECRET_KEY'] = SECRET_KEY
 @app.route('/')
 def index():
     user_id = session.get("user_id")
+    print(user_id)
     if user_id:
         user_username = session.get("user_username")
         data = Dashboard(user_id)
@@ -109,9 +110,17 @@ def tips(num):
     data = Tips(user_id, week)
     return render_template('tips.html', username=username, data=data)
 
-@app.route('/ladder')
-def ladder():
-    return render_template('base.html')
+@app.route('/enter_tips', methods=['POST'])
+def enter_tips():
+    user_id = session.get('user_id')
+    number_of_tips = request.form.get('length')
+    for num in range(int(number_of_tips)):
+        tip = request.form.get(f'{num}')
+        if does_tip_exist(user_id, tip):
+            update_tip(user_id, tip)
+        else :
+            create_tip(user_id, tip)
+    return redirect('/')
 
 if __name__ == "__main__":
     app.run(debug=True)

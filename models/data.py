@@ -9,11 +9,14 @@ DB_URL = os.environ.get("DATABASE_URL", "dbname=esport_tipping")
 class Tips:
     def __init__(self, user_id, week):
         self.current_week = week
+        #booleans
+        self.is_week_completed = is_week_results_filled(week)
+        #getters
         self.correct_tips = get_users_correct_tips_for_week(user_id, self.current_week)
         self.completed_games = get_total_completed_games_for_week(self.current_week)
         self.season_tips = get_season_tips_for_user(user_id)
         self.weeks = get_list_of_weeks()
-        self.matches = get_matches_for_tips(self.current_week)
+        self.matches = get_matches_for_tips(user_id, self.current_week)
 
 class Dashboard:
     def __init__(self, user_id):
@@ -175,6 +178,8 @@ def get_last_completed_week():
                 WHERE week = %s
                 ''', [week])
     results = cur.fetchall()
+    cur.close()
+    conn.close()
     for result in results:
         if result[0] == 0:
             return week - 1
@@ -331,7 +336,7 @@ def get_tips_for_dashboard(user_id, week):
     cur = conn.cursor()
     cur.execute('''SELECT blue.id, blue.abbreviation, blue.logo,
                 red.id, red.abbreviation, red.logo,
-                tips.team_tipped_id, matches.winner_id 
+                tips.team_tipped_id, matches.winner_id, tips.user_id, matches.id
                 FROM tips FULL JOIN matches ON tips.match_id = matches.id
                 INNER JOIN teams blue ON blue.id = matches.team1_id
                 INNER JOIN teams red ON red.id = matches.team2_id
@@ -349,39 +354,50 @@ def create_tips_for_dashboard(results):
     for result in results:
         if result[7] == 0: #winner_id
             completed = False
-            tip = {
-                'left_team_abbreviation': result[1],
-                'right_team_abbreviation': result[4],
-                'completed': completed
+            if does_tip_exist(result[8], f'{result[9]},'):
+                if result[0] == result[6]:
+                    logo = result[2]
+                    abbreviation = result[1]
+                else:
+                    logo = result[5]
+                    abbreviation = result[4]
+                tip = {
+                    'logo': logo,
+                    'abbreviation': abbreviation,
+                    'completed': completed
+                }
+            else:
+                tip = {
+                    'left_team_abbreviation': result[1],
+                    'right_team_abbreviation': result[4],
+                    'completed': completed
             }
         else:
             completed = True
-        
-        if completed:
             if result[7] == result[6]: #winner_id == team_tipped_id
                 tip_correct = True
             else:
                 tip_correct = False
         
-        if result[0] == result[6]: #left(team).id = team_tipped_id
-            tip = {
-                'abbreviation': result[1],
-                'logo': result[2],
-                'tip_correct': tip_correct,
-                'completed': completed
-            }
-        else:
-            tip = {
-                'abbreviation': result[4],
-                'logo': result[5],
-                'tip_correct': tip_correct,
-                'completed': completed
-            }
+            if result[0] == result[6]: #left(team).id = team_tipped_id
+                tip = {
+                    'abbreviation': result[1],
+                    'logo': result[2],
+                    'tip_correct': tip_correct,
+                    'completed': completed
+                }
+            else:
+                tip = {
+                    'abbreviation': result[4],
+                    'logo': result[5],
+                    'tip_correct': tip_correct,
+                    'completed': completed
+                }
         tips.append(tip)
     return tips
 
 
-def get_matches_for_tips(week):
+def get_matches_for_tips(user_id, week):
     conn = psycopg2.connect(DB_URL)
     cur = conn.cursor()
     cur.execute('''
@@ -397,31 +413,80 @@ def get_matches_for_tips(week):
     results = cur.fetchall()
     cur.close()
     conn.close()
-    return create_matches_for_tips(results)
+    return create_matches_for_tips(user_id, results)
 
 
-def create_matches_for_tips(results):
+def create_matches_for_tips(user_id, results):
     matches = []
     for result in results:
         if result[8] == 0: #winner_id
             completed = False
+            if has_match_been_tipped_by_user(user_id, result[6]):
+                team_tipped_id = get_user_tip_for_match(user_id, result[6])
+                left_tipped = team_tipped_id == result[0]
+                right_tipped = team_tipped_id == result[3]
+                match = {
+                'left_id': result[0],
+                'left_abbreviation': result[1],
+                'left_logo': result[2],
+                'left_tipped': left_tipped,
+                'right_id': result[3],
+                'right_abbreviation': result[4],
+                'right_logo': result[5],
+                'right_tipped': right_tipped,
+                'date': get_date_from_timestamp(result[7]),
+                'time': get_time_from_timestamp(result[7]),
+                'match_id': result[6],
+                'completed': completed
+                }
+            else:
+                match = {
+                'left_id': result[0],
+                'left_abbreviation': result[1],
+                'left_logo': result[2],
+                'right_id': result[3],
+                'right_abbreviation': result[4],
+                'right_logo': result[5],
+                'date': get_date_from_timestamp(result[7]),
+                'time': get_time_from_timestamp(result[7]),
+                'match_id': result[6],
+                'completed': completed
+        }
         else:
             completed = True
-        match = {
-            'left_id': result[0],
-            'left_abbreviation': result[1],
-            'left_logo': result[2],
-            'right_id': result[3],
-            'right_abbreviation': result[4],
-            'right_logo': result[5],
-            'date': get_date_from_timestamp(result[7]),
-            'time': get_time_from_timestamp(result[7]),
-            'match_id': result[6],
-            'completed': completed
-        }
+            team_tipped_id = get_user_tip_for_match(user_id, result[6])
+            winner_id = get_winner_for_match(result[6])
+            tip_correct = team_tipped_id == winner_id
+            left_tipped = team_tipped_id == result[0]
+            right_tipped = team_tipped_id == result[3]
+            match = {
+                'left_id': result[0],
+                'left_abbreviation': result[1],
+                'left_logo': result[2],
+                'left_tipped': left_tipped,
+                'right_id': result[3],
+                'right_abbreviation': result[4],
+                'right_logo': result[5],
+                'right_tipped': right_tipped,
+                'date': get_date_from_timestamp(result[7]),
+                'time': get_time_from_timestamp(result[7]),
+                'match_id': result[6],
+                'completed': completed,
+                'tip_correct': tip_correct
+            }
         matches.append(match)
     return matches
 
+def get_winner_for_match(match_id):
+    conn = psycopg2.connect(DB_URL)
+    cur = conn.cursor()
+    cur.execute('''
+                SELECT winner_id
+                FROM matches
+                WHERE id = %s
+                ''', [match_id])
+    results = cur.fetchall()
+    return results[0][0]
 
 def convert_num_to_numth(num):
     end_digit = num % 10
@@ -567,3 +632,91 @@ def get_list_of_weeks():
     for result in results:
         weeks.append(result[0])
     return weeks
+
+def is_match_complete(match_id):
+    conn = psycopg2.connect(DB_URL)
+    cur = conn.cursor()
+    cur.execute('''
+                SELECT winner_id
+                FROM matches
+                WHERE id = %s
+                ''', [match_id])
+    results = cur.fetchall()
+    cur.close()
+    conn.close()
+    return results[0][0] != 0
+
+def has_match_been_tipped_by_user(user_id, match_id):
+    conn = psycopg2.connect(DB_URL)
+    cur = conn.cursor()
+    cur.execute('''
+                SELECT COUNT(matches.id)
+                FROM matches
+                INNER JOIN tips
+                ON tips.match_id = matches.id
+                WHERE matches.id = %s
+                AND tips.user_id = %s
+                ''', [match_id, user_id])
+    results = cur.fetchall()
+    cur.close()
+    conn.close()
+    return results[0][0] != 0
+
+def get_user_tip_for_match(user_id, match_id):
+    conn = psycopg2.connect(DB_URL)
+    cur = conn.cursor()
+    cur.execute('''
+                SELECT tips.team_tipped_id
+                FROM matches
+                INNER JOIN tips
+                ON tips.match_id = matches.id
+                WHERE matches.id = %s
+                AND tips.user_id = %s
+                ''', [match_id, user_id])
+    results = cur.fetchall()
+    cur.close()
+    conn.close()
+    return results[0][0]
+
+def does_tip_exist(user_id, tip):
+    match_id = tip.split(',')[0]
+    conn = psycopg2.connect(DB_URL)
+    cur = conn.cursor()
+    cur.execute('''
+                SELECT COUNT(id)
+                FROM tips
+                WHERE user_id = %s
+                AND match_id = %s
+                ''', [user_id, match_id])
+    results = cur.fetchall()
+    cur.close()
+    conn.close()
+    return results[0][0] != 0
+
+def update_tip(user_id, tip):
+    match_id = tip.split(',')[0]
+    team_tipped_id = tip.split(',')[1]
+    conn = psycopg2.connect(DB_URL)
+    cur = conn.cursor()
+    cur.execute('''
+                UPDATE tips
+                SET team_tipped_id = %s
+                WHERE user_id = %s
+                AND match_id = %s
+                ''', [team_tipped_id, user_id, match_id])
+    conn.commit()
+    cur.close()
+    conn.close()
+
+def create_tip(user_id, tip):
+    match_id = tip.split(',')[0]
+    team_tipped_id = tip.split(',')[1]
+    conn = psycopg2.connect(DB_URL)
+    cur = conn.cursor()
+    cur.execute('''
+                INSERT INTO tips (user_id, match_id, team_tipped_id)
+                VALUES (%s, %s, %s)
+                ''', [user_id, match_id, team_tipped_id])
+    conn.commit()
+    cur.close()
+    conn.close()

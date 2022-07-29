@@ -2,12 +2,13 @@
 
 {% block script %}
 <script src="static/base.js" defer></script>
+<script src="static/tips.js" defer></script>
 {% endblock %}
 
 {% block main %}
 
 <div class="entire-tips">
-    <select name="tip-week" class="tip-week-select">
+    <select id='tip-week-selector' name="tip-week" class="tip-week-select">
         {% for week in data.weeks %}
         {% if week|string() == data.current_week %}
         <option selected value="{{week}}">Week {{week}}</option>
@@ -25,24 +26,42 @@
                 <span class="date-time">{{match.time}}</span>
             </div>
             <div class="both-teams-div">
-                <div class="individual-team-tip">
-                    <img src="{{match.left_logo}}" height="100px">
+                <div data-match="{{match.match_id}}" data-team="{{match.left_id}}" data-completed="{{match.completed}}" 
+                {% if match.left_tipped and match.tip_correct and match.completed %} class="individual-team-tip tipped-correct"
+                {% elif match.left_tipped and not match.tip_correct and match.completed %} class="individual-team-tip tipped-incorrect"
+                {% elif match.left_tipped and not match.completed %} class="individual-team-tip tipped"
+                {% else %} class="individual-team-tip" {% endif %}> 
+                    <img src="{{match.left_logo}}" height="60px">
                     <span class="tip-abbreviation">{{match.left_abbreviation}}</span>
                 </div>
                 <div class="versus-div">
+                    {% if not match.completed %}
                     <img src="../static/images/vs.jpg" height="30px">
+                    {% else %}
+                        {% if match.tip_correct %}
+                        <img src="../static/images/tick.png" height="40px">
+                        {% else %}
+                        <img src="../static/images/cross.png" height="40px">
+                        {% endif %}
+                    {% endif %}
                 </div>
-                <div class="individual-team-tip">
-                    <img src="{{match.right_logo}}" height="100px">
+
+                <div data-match="{{match.match_id}}" data-team="{{match.right_id}}" data-completed="{{match.completed}}" 
+                {% if match.right_tipped and match.tip_correct and match.completed %} class="individual-team-tip tipped-correct"
+                {% elif match.right_tipped and not match.tip_correct and match.completed %} class="individual-team-tip tipped-incorrect"
+                {% elif match.right_tipped and not match.completed %} class="individual-team-tip tipped"
+                {% else %} class="individual-team-tip" {% endif %}>
+                    <img src="{{match.right_logo}}" height="60px">
                     <span class="tip-abbreviation">{{match.right_abbreviation}}</span>
                 </div>
             </div>
         </div>
         {% endfor %}
-
-        <div>
-            SAVE TIPS BUTTON GOES HERE
-        </div>
     </div>
+    {% if not data.is_week_completed %}
+    <div id="saveTips" class="save-tips-button-div">
+        <p class="save-tips-button-text">SAVE TIPS</p>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

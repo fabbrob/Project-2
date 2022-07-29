@@ -637,3 +637,37 @@
     text-shadow:  1px 1px 1px black;
     color: white;
 }
+
+.tipped {
+    background-color: lightgrey;
+}
+
+.tipped-correct {
+    background-color: lightgrey;
+    outline: 2px solid #2AA715;
+}
+
+.tipped-incorrect {
+    background-color: lightgrey;
+    outline: 2px solid #A71515;
+}
+
+.save-tips-button-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.save-tips-button-text {
+    background-color: #6460F0;
+    color: white;
+    text-shadow: 1px 1px 1px black;
+    border-radius: 10px;
+    padding: 30px 60px;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 36px;
+}
+
+.save-tips-button-text:hover {
+    outline: 2px solid #290132;
+}
