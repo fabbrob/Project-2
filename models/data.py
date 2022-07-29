@@ -43,8 +43,8 @@ class Dashboard:
 
 class Leaderboard:
     def __init__(self):
-        self.closest_week = get_closest_week()
-        self.leaderboard = get_leaderboard_for_leaderboard(get_leaderboard(self.closest_week), self.closest_week)
+        self.last_completed_week = get_last_completed_week()
+        self.leaderboard = get_leaderboard_for_leaderboard(get_leaderboard(self.last_completed_week), self.last_completed_week)
 
 
 def get_time_difference_of_timestamps(time1, time2):

@@ -99,8 +99,9 @@ def change_password():
 
 @app.route('/leaderboard')
 def leaderboard():
+    username = session.get('user_username')
     data = Leaderboard()
-    return render_template('leaderboard.html', data=data)
+    return render_template('leaderboard.html', username=username, data=data)
 
 @app.route('/tips<num>')
 def tips(num):
